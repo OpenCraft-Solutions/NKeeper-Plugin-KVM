@@ -55,25 +55,25 @@ jobs:
         run: npm run typecheck
 
       - name: Restore (locked)
-        run: dotnet restore NKeeper.Plugins.Windows.slnx --locked-mode
+        run: dotnet restore NKeeper.Plugins.Kvm.slnx --locked-mode
 
       - name: Check formatting
-        run: dotnet format NKeeper.Plugins.Windows.slnx --verify-no-changes --no-restore
+        run: dotnet format NKeeper.Plugins.Kvm.slnx --verify-no-changes --no-restore
 
       # Building the plugin builds its frontend, then packs the plugin and signs it with a development key made
       # fresh for this run (plugin-security.md §10).
       - name: Build and pack
-        run: dotnet build NKeeper.Plugins.Windows.slnx --no-restore --configuration Release
+        run: dotnet build NKeeper.Plugins.Kvm.slnx --no-restore --configuration Release
 
       # The tests start NKeeper's test server (NKeeper.Testing) with the package above loaded, and a real
       # OpenSSH server in a container; Docker is on the runner.
       - name: Test
-        run: dotnet test NKeeper.Plugins.Windows.slnx --no-build --configuration Release
+        run: dotnet test NKeeper.Plugins.Kvm.slnx --no-build --configuration Release
 
       - name: Keep the development-signed package
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: windows-development-package
+          name: kvm-development-package
           path: artifacts/plugins/*.nkp
           if-no-files-found: error
           retention-days: 7
