@@ -4,17 +4,17 @@
     "net10.0": {
       "NKeeper.Abstractions": {
         "type": "Direct",
-        "requested": "[1.11.0, )",
-        "resolved": "1.11.0",
-        "contentHash": "asj8UOsJj7KfghG0oz24b+vDjmIE4J83HIQEMRZie1XW87OsVLMTDIZ+I0eBrPjzoD7+14MPmLPgLdMDuAcT4Q=="
+        "requested": "[1.15.0, )",
+        "resolved": "1.15.0",
+        "contentHash": "EEVSxKju99pw2rtp6iEM3T8n0KlD0VN+vaSGo/OgsdIopmjDsWMjJxAemJGdKUo3n6K8lZBVrZGfD2iEkzNGcQ=="
       },
       "NKeeper.Plugin.Build": {
         "type": "Direct",
-        "requested": "[1.11.0, )",
-        "resolved": "1.11.0",
-        "contentHash": "5DH79NHsPOFzayEW5CUHvts9vJk0/H1zX8EfEoxWCMe4bSjDyZYWNUv59PzjdLZpae0ZzlWwo1KKJXuQKuZ1UA==",
+        "requested": "[1.15.0, )",
+        "resolved": "1.15.0",
+        "contentHash": "AiqxWT/hTuA9G3yOyZQMhrA8xzD1FkBmVslZVWcb+BTPaABXiGvl8R7Ux1sYbLUwATWTKq9Ftvm3iWkxKRP50w==",
         "dependencies": {
-          "NKeeper.Abstractions": "1.11.0"
+          "NKeeper.Abstractions": "1.15.0"
         }
       },
       "NKeeper.Plugins.Virtualization": {

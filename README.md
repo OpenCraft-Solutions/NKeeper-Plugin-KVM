@@ -9,9 +9,11 @@ It contributes the `kvm` service type (SSH, port 22) and a **Virtual machines** 
 - their power actions: start, shut down, reboot, pause, resume, hibernate (a managed save), force off and reset;
 - a guest's VNC console in the same tab.
 
-It reaches the hypervisor as virt-manager does: over SSH, which core opens and signs in to with the service's credential, running `virsh -c qemu:///system`. The SSH user needs access to libvirt's system connection (membership in the `libvirt` group, usually). A guest's VNC display, usually on the hypervisor's loopback, is reached through an SSH port forward, so it never needs to listen on the network. It needs SDK 1.11 (`>=1.11.0 <2.0.0`), for port forwards.
+It reaches the hypervisor as virt-manager does: over SSH, which core opens and signs in to with the service's credential, running `virsh -c qemu:///system`. The SSH user needs access to libvirt's system connection (membership in the `libvirt` group, usually). A guest's VNC display, usually on the hypervisor's loopback, is reached through an SSH port forward, so it never needs to listen on the network. It needs SDK 1.15 (`>=1.15.0 <2.0.0`): port forwards since 1.11, and scan findings with guests.
 
-**Not yet:** SPICE consoles (a guest with only SPICE is explained, not shown), TLS-only displays, and linking a guest to its host in NKeeper's inventory.
+**Scan** (host action `kvm.scan`, SDK 1.15), 1.x's hypervisor scan: one SSH login lists every guest with `virsh`, with its state, vCPUs, memory, MAC addresses (`domiflist`) and the addresses libvirt knows (the guest agent's, else its DHCP leases). The scan dialog proposes linking each guest to the host it is, as running on this hypervisor, or adding a host for it (NKeeper's `docs/architecture.md` §7.49). Nothing on the hypervisor changes; the scan is audited as `kvm.scan`.
+
+**Not yet:** SPICE consoles (a guest with only SPICE is explained, not shown), and TLS-only displays.
 
 The plugin's ID is `kvm`, and it is built in: it is signed with NKeeper's official key and installed with NKeeper.
 

@@ -102,6 +102,23 @@ public sealed class KvmTests
         Assert.Equal(new KvmConnection.Display("vnc", host, port, password), KvmConnection.ParseDisplayUri(uri));
 
     [Fact]
+    public void A_scan_lists_each_guest_with_what_its_given_and_its_MACs_and_addresses()
+    {
+        const string output = "11111111-2222-3333-4444-555555555555\tweb01\trunning\t4\t8388608\t52:54:00:aa:bb:01,52:54:00:aa:bb:02\t192.168.122.10,127.0.0.1\n"
+            + "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\told\tshut off\t\t\t52:54:00:aa:bb:03\t\n"
+            + "not-a-uuid\tbogus\trunning\t1\t1024\t\t\n";
+
+        var guests = KvmScanner.Parse(output);
+
+        Assert.Equal(2, guests.Count);
+        Assert.Equal(["52:54:00:aa:bb:01", "52:54:00:aa:bb:02"], guests[0].MacAddresses);
+        Assert.Equal(["192.168.122.10"], guests[0].IpAddresses);
+        Assert.Equal((4, 8192), (guests[0].CpuCores, guests[0].MemoryMiB));
+        Assert.Equal(("old", "shut off", null, null), (guests[1].Name, guests[1].State, guests[1].CpuCores, guests[1].MemoryMiB));
+        Assert.Empty(guests[1].IpAddresses!);
+    }
+
+    [Fact]
     public void A_TLS_only_SPICE_display_is_explained() =>
         Assert.Contains("TLS", Assert.Throws<GuestException>(() => KvmConnection.ParseDisplayUri("spice://127.0.0.1?tls-port=5901")).Message, StringComparison.Ordinal);
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using NKeeper.Abstractions;
@@ -20,11 +21,13 @@ public sealed class KvmPlugin : IPlugin
         contributions.AddServiceType(new ServiceType(ServiceType, "KVM") { DefaultPort = 22, Health = HealthProbe.Tcp });
         contributions.AddSessionType(new SessionType(SessionType, "Virtual machines", typeof(GuestSessionHandler<KvmProvider>)) { ServiceTypes = [ServiceType] });
         contributions.AddHostAction(new HostAction("kvm.guests", "Virtual machines", SessionType: SessionType));
+        // SDK 1.15 (§7.49): 1.x's hypervisor scan, its guests for the shell to link to the hosts they are.
+        contributions.AddHostAction(new HostAction("kvm.scan", "KVM guests") { Endpoint = "scan", ServiceTypes = [ServiceType], Scan = true });
     }
 
     public void ConfigureServices(IServiceCollection services, PluginContext context) => services.AddGuestProvider<KvmProvider>();
 
-    public void MapEndpoints(IEndpointRouteBuilder endpoints, PluginContext context)
-    {
-    }
+    public void MapEndpoints(IEndpointRouteBuilder endpoints, PluginContext context) =>
+        // Only someone who can change the host applies what a scan finds (§7.26).
+        endpoints.MapHostGroup(HostPermission.Manage).MapPost("/scan", KvmScanner.ScanAsync);
 }
